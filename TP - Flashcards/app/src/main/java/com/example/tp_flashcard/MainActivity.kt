@@ -4,37 +4,39 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.tp_flashcard.ui.theme.TP_FlashcardTheme
+import com.example.tp_flashcard.viewmodel.*
 
 class MainActivity : ComponentActivity() {
+
+    private val app by lazy { application as FlashcardApplication }
+    private val factory by lazy { FlashcardVMFactory(app.repository) }
+
+    private val homeVM: HomeViewModel by viewModels { factory }
+    private val flashVM: FlashcardViewModel by viewModels { factory }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             TP_FlashcardTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(Modifier.fillMaxSize()) { padding ->
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
-                            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Vertical)),
+                            .padding(padding)
+                            .padding(16.dp)
                     ) {
-                        FlashcardNavHost()
+                        AppNavHost(
+                            homeViewModel      = homeVM,
+                            flashcardViewModel = flashVM
+                        )
                     }
                 }
             }
