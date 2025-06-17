@@ -13,3 +13,14 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android / Gradle
+/.idea
+/.gradle
+/local.properties
+/build
+**/build
+
+# macOS
+.DS_Store
+
